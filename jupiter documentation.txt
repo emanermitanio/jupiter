@@ -1,0 +1,51 @@
+PROJECT JUPITER
+
+OBJECTIVES
+1. Migration of Legacy Tools: Transfer existing functionalities from disparate legacy tools to a unified, modern web application built with Python, consolidating data management processes.
+
+2. Modern User Interface and Features: Improve the overall user experience by providing an intuitive and responsive interface. Enable advanced functionalities to streamline tasks, enhance productivity, and meet evolving user requirements.
+
+3. Centralized Data Storage: Establish a centralized data storage system within the web application to ensure data consistency, integrity, and easy accessibility. This centralization aims to eliminate data silos and enhance collaboration among users.
+
+4. Automated Data Transformation and Visualization: Implement automated processes in building reports and dashboard. 
+Cost Effectiveness through Automation:
+
+5. Cost Effective: Reduce manual legwork and storage expenses by leveraging automation features inherent in the web application.
+
+INFRASTRUCTURE
+1. Programming Language: Python
+2. Web Framework: Flask
+3. Resources: Package and Libraries are installed from Chase Artifacts
+4. IDE: Visual Studio Code
+5. Server Specification: 
+	Developer's workspace (Workspace Enterprise)
+	Operating System: Windows Server 64-bit
+	CPU: 3 GHz, 8 Cores
+	RAM: 65 GB
+
+5. Data Storage: SQLite
+6. Production Server: Waitress (Waitress excels with efficient concurrency handling, ensuring optimal performance and simplified configuration)
+
+SQLite
+SQLite is a lightweight, serverless, and self-contained database engine that is widely used for embedded systems and small to medium-sized applications.
+
+Advantages:
+1. Zero Configuration: Requires minimal setup, making it easy to use and deploy.
+2. Self-contained: The entire database is a single file, simplifying backup and distribution.
+3. Serverless: Operates without a separate server process, reducing system resource requirements.
+4. Cross-Platform: Works seamlessly on various operating systems without modification.
+5. Transaction Support: Provides support for ACID (Atomicity, Consistency, Isolation, Durability) transactions.
+
+Atomicity: In SQLite, atomicity ensures that a transaction is treated as a single, indivisible unit. Either all the changes within the transaction are applied, or none of them are. If a failure occurs during the transaction (e.g., power outage or system crash), SQLite ensures that the database remains in a consistent state by rolling back the incomplete transaction.
+
+Consistency: Consistency guarantees that a database transitions from one valid state to another after a transaction. It ensures that the integrity constraints defined in the database schema are not violated. SQLite checks and enforces constraints during transactions to maintain the consistency of the data.
+
+Isolation: Isolation ensures that multiple transactions can occur concurrently without affecting each other. Each transaction appears to be executed in isolation, without interference from other transactions. SQLite achieves isolation through mechanisms like locks and transactions, preventing conflicts and maintaining data integrity.
+
+Durability: Durability guarantees that once a transaction is committed, its changes are permanent and will survive any subsequent failures, such as system crashes or power outages.
+
+SECURITY
+1. Application will be running internally in local network address with standard authentication implemented
+2. Not accessible online (outside Citrix) 
+
+ 
