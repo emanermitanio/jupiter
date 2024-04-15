@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workflow Master - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+
+  <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css')}}">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg bg-primary login-header">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Workflow Master v1.0</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/home"><i
+                class="fa-solid fa-house fa-sp fa-white"></i>Home</a>
+          </li>
+        </ul>
+        <form>
+          <div class="dropdown userprofile">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{usersid}} {{username}}
+            </button>
+            <ul class="dropdown-menu ">
+              <li><a class="dropdown-item" style="color: grey !important;" href="#">Group: {{dept}} | {{wgroup}}</a>
+              </li>
+              <li><a class="dropdown-item" style="color: grey !important;" href="#">Change Password</a>
+              </li>
+              <li><a class="dropdown-item" style="color: grey !important;" href="/logout">Logout</a></li>
+
+            </ul>
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+
+  <div class="content-wrapper-1">
+
+    <div class="sidebar-grid">
+      <div class="sidebar-item">
+        <a href="/adminchecklist"><i class="fa-solid fa-book fa-sp"></i>RETURN TO CHECKLISTS</a>
+        <a href="" data-bs-toggle="modal" data-bs-target="#newchecklist"><i class="fa-solid fa-plus fa-sp"></i>CREATE
+          NEW CHECKPOINT</a>
+
+
+      </div>
+
+    </div>
+
+    <!-- Modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="newchecklist" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="newchecklistLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form action="/createcheckpoint" method="post">
+            <div class="modal-header bg-primary d-flex justify-content-between align-items-center">
+              <h1 class="modal-title fs-5 fa-white" id="viewcheckpointLabel">CHECKPOINT DETAILS</h1>
+              <div>
+                <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus fa-white fa-lg fa-sp"></i>CREATE</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark fa-white fa-lg fa-sp"></i>CLOSE</button>
+              </div>
+            </div>
+
+
+            <div class="modal-body">
+
+              <div class="row">
+                <div class="col-6 mb-1">
+                  <label class="form-label col-form-label">Department</label>
+                  <input type="text" class="form-control read-only" name="var_dept" readonly value="{{var_dept}}">
+                </div>
+                <div class="col-6 mb-1">
+                  <label class="form-label col-form-label">Workgroup</label>
+                  <input type="text" class="form-control read-only" name="var_wgroup" readonly value="{{var_wgroup}}">
+                </div>
+              </div>
+              <div class="mb-1">
+                <label class="form-label col-form-label">Checklist</label>
+                <input type="text" class="form-control read-only" name="var_checklist" readonly
+                  value="{{var_checklist}}">
+              </div>
+              <div class="row">
+                <div class="col-6 mb-1">
+                  <label class="form-label col-form-label">Enter Category</label>
+                  <input type="text" class="form-control" name="category" required>
+                </div>
+                <div class="col-6 mb-1">
+                  <label class="form-label col-form-label">Enter Checkpoint Arrangement</label>
+                  <input type="number" class="form-control" name="sort">
+                </div>
+              </div>
+              
+              
+              
+              <div class="mb-1">
+                <label class="form-label col-form-label">Enter New Checkpoint/Question</label>
+                <textarea class="form-control fixed-tarea" id="" cols="30" rows="2" name="question" required></textarea>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label col-form-label">Enter Observation Template</label>
+                <textarea class="form-control fixed-tarea" id="" cols="30" rows="2" name="obstemplate"
+                  required></textarea>
+              </div>
+              <div class="mb-1">
+                <div class="d-flex justify-content-between">
+                  <label class="form-label col-form-label">Enter Process Guideline</label>
+                  <div class="grid-editor">
+                    <a class="btn btn-success" onclick="formatText('bold')"><i class="fa-solid fa-bold fa-white"></i></a>
+                    <a class="btn btn-success" onclick="formatText('italic')"><i class="fa-solid fa-italic fa-white"></i></a>
+                    <a class="btn btn-success" onclick="formatText('underline')"><i class="fa-solid fa-underline fa-white"></i></a>
+                    <a class="btn btn-success" onclick="formatText('insertUnorderedList')"><i class="fa-solid fa-list fa-white"></i></a>
+                    <a class="btn btn-success" onclick="formatText('insertOrderedList')"><i class="fa-solid fa-list-ol fa-white"></i></a>
+                  </div>
+                </div>
+                <script>
+                  function formatText(command, value = null) {
+                    document.execCommand(command, false, value);
+                  }
+
+                  // Function to update the value of the hidden input field with the content of the div
+                  function updateIOP() {
+                    var iopContent = document.getElementById('editor').innerHTML;
+                    document.getElementById('iop').value = iopContent;
+                  }
+
+                  // Call the updateIOP function before submitting the form
+                  document.querySelector('form').addEventListener('submit', updateIOP);
+                </script>
+
+                <div class="editor iop" contenteditable="true" id="editor">
+                  <p></p>
+                </div>
+                <input type="hidden" name="iop" id="iop">
+
+              </div>
+
+             
+            </div>
+
+           
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-maincontent">
+
+      <div class="content-section" id="searchcheckpoint">
+
+        <h5>{{var_dept}} - {{var_wgroup}} - {{var_checklist}}</h5>
+        <!-- Table show all checkpoints -->
+
+        <div class="d-flex gap-2 mb-3" style="border: 1px solid whitesmoke; padding: 10px;">
+          <label>
+            <input class="form-check-input" type="radio" name="activeStatus" id="activeBtn" value="active" checked>
+            ACTIVE
+          </label>
+          <label>
+            <input class="form-check-input" type="radio" name="activeStatus" id="inactiveBtn" value="inactive"> INACTIVE
+          </label>
+        </div>
+
+
+        <table class="table table-bordered table-hover table-sm">
+          <thead>
+            <th style="text-align: center;">EDIT</th>
+            <th>CHECKPOINT ID</th>
+            <th>ACTIVE/INACTIVE</th>
+            <th>CATEGORY</th>
+            <th>CHECKPOINT/QUESTION</th>
+          </thead>
+          <tbody>
+            {% for i in list_checkpoints %}
+            <tr {% if i.ACTIVE==0 %} class="inactive-row" {% else %} class="active-row" {% endif %}>
+              <td style="width: 75px;">
+                <div class="d-flex gap-2 p-1">
+                  <a
+                    href="/editcheckpoints?checklist={{ i.CHECKLIST }}&dept={{i.DEPARTMENT}}&wgroup={{i.WORKGROUP}}&chkpt={{i.CHKPT_ID}}">
+                    <button class="btn btn-success btn-sm"><i class="fa-solid fa-pen fa-lg fa-white"></i></button>
+                  </a>
+
+                  <a href="/admincheckpoint?checklist={{ i.CHECKLIST }}&dept={{i.DEPARTMENT}}&wgroup={{i.WORKGROUP}}"
+                    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-can fa-lg fa-white"></i></button>
+                  </a>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="false" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <form action="/deletecheckpoint" method="post">
+                        <div class="modal-content">
+                          <div class="modal-header bg-danger">
+                            <h1 class="modal-title fs-5 fa-white" id="staticBackdropLabel">ALERT</h1>
+                          </div>
+                          <div class="modal-body">
+                            <p class="lead" style="text-align: left;">Are your sure you want to proceed deleting this
+                              Checkpoint?</p>
+                            <p class="lead" style="text-align: left; font-weight: bold;">{{i.QUESTION}}</p>
+                            <input hidden type="text" name="chkpt" readonly value="{{i.CHKPT_ID}}">
+                          </div>
+                          <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Proceed</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                </div>
+
+              </td>
+              <td style="width: 150px; vertical-align: middle;">{{ i.CHKPT_ID }}</td>
+              <td style="width: 150px; vertical-align: middle;">
+                {% if i.ACTIVE == 1 %}
+                ACTIVE
+                {% else %}
+                INACTIVE
+                {% endif %}
+              </td>
+
+              <td style="width: 400px; vertical-align: middle;">{{ i.Category }}</td>
+              <td style="vertical-align: middle;">{{ i.Question }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <script>
+          window.onload = function () {
+            showActiveCheckpoints();
+          };
+
+          document.getElementById('activeBtn').addEventListener('click', showActiveCheckpoints);
+          document.getElementById('inactiveBtn').addEventListener('click', showInactiveCheckpoints);
+
+          function showActiveCheckpoints() {
+            showCheckpoints('.active-row', 'table-row');
+            hideCheckpoints('.inactive-row');
+          }
+
+          function showInactiveCheckpoints() {
+            showCheckpoints('.inactive-row', 'table-row');
+            hideCheckpoints('.active-row');
+          }
+
+          function showCheckpoints(selector, displayValue) {
+            var rows = document.querySelectorAll(selector);
+            rows.forEach(function (row) {
+              row.style.display = displayValue;
+            });
+          }
+
+          function hideCheckpoints(selector) {
+            showCheckpoints(selector, 'none');
+          }
+        </script>
+
+
+
+
+
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+
+  <!-- Bootstrap JS -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    crossorigin="anonymous"></script>
+
+  <!-- Script for dynamic Select -->
+  <script>
+    // Get references to the select elements
+    const departmentSelect = document.getElementById('department');
+    const workgroupSelect = document.getElementById('workgroup');
+
+    // Define the options for each department
+    const departmentOptions = {
+      COU: ['PAR', 'PDDR'],
+      CB: ['DOC CREATE', 'DOC REVIEW'] // Add options for CB department here
+    };
+
+    // Function to populate the workgroup select based on selected department
+    function populateWorkgroups() {
+      const selectedDepartment = departmentSelect.value;
+      // Clear previous options
+      workgroupSelect.innerHTML = '<option value=""></option>';
+      // Populate with options based on selected department
+      departmentOptions[selectedDepartment].forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option;
+        optionElement.textContent = option;
+        workgroupSelect.appendChild(optionElement);
+      });
+    }
+
+    // Listen for changes in the department select
+    departmentSelect.addEventListener('change', populateWorkgroups);
+
+    // Initial population of workgroups
+    populateWorkgroups();
+  </script>
+
+</body>
+
+</html>

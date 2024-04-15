@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Workflow Master - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg bg-primary login-header">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Workflow Master v1.0</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+                </ul>
+                <form>
+                    <div class="dropdown userprofile">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {{usersid}} {{username}}
+                        </button>
+                        <ul class="dropdown-menu ">
+                            <li><a class="dropdown-item" style="color: grey !important;"
+                                    href="#">Group: {{dept}} | {{wgroup}}</a>
+                            </li>
+                            <li><a class="dropdown-item" style="color: grey !important;"
+                                    href="#">Change Password</a></li>
+                            <li><a class="dropdown-item" style="color: grey !important;" href="/logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content-wrapper-1">
+        <div class="sidebar-grid">
+            <div class="sidebar-item">
+                <span class="sidenavigation">NAVIGATION</span>
+                <a href="/home"><i class="fa-solid fa-home fa-sp"></i>HOMEPAGE</a>
+          
+                <a href="" data-bs-toggle="modal" data-bs-target="#newchecklist"><i class="fa-solid fa-plus fa-sp"></i>CREATE NEW REVIEW</a>
+                
+                <div class="modal fade" id="newchecklist" tabindex="-1" aria-labelledby="newchecklistLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="newchecklistLabel">Create New Review</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <form action="/createworkflow" method="post">
+                        <div class="modal-body">
+                           
+                            <div class="mb-3">
+                                <label class="form-label">Enter Case Number</label>
+                                <input type="text" class="form-control" id="casenumber" name="casenumber" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Select Checklist</label>
+                                <select id="" class="form-select" required name="checklist">
+                                    <option value=""></option>
+                                    {% for i in check_list %}
+                                    <option value="{{i.CHECKLIST}}">{{i.CHECKLIST}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                    
+                            <button type="submit" class="btn btn-primary">CREATE</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+                
+                <a href=""><i class="fa-solid fa-book fa-sp"></i>DASHBOARD</a>
+            </div>
+        </div>
+
+        <div class="admin-maincontent">
+            <div class="content-section ">
+                <div class="d-flex justify-content-between mb-3" style="align-items: center; background-color: var(--blue);">
+                    <h5> <i class="fa-solid fa-book-open fa-lg" style="color: #FFF !important; margin-right: 5px;"></i>Records List</h5>
+                    <form action="">
+                        <div style="align-items: center; display: flex; margin-right: 20px; grid-gap: 15px;">
+                            <i class="fa-sharp fa-solid fa-rotate fa-xl" style="color: #FFF !important;"></i>
+                            <i class="fa-solid fa-user-pen fa-xl" style="color: #FFF !important;"></i>
+                            <i class="fa-solid fa-print fa-xl" style="color: #FFF !important;"></i>
+                            <input type="text" class="form-control" placeholder="Search Casenumber">
+                            <i class="fa-solid fa-magnifying-glass fa-xl" style="color: #FFF !important;"></i>
+                        </div>
+                    </form>
+                </div>
+                
+                <table class="table table-hover">
+                    <thead>                       
+                        <th style="width: 50px;">VIEW</th>                     
+                        <th>CASENUMBER</th>
+                        <th>CHECKLIST</th>
+                        <th>WORKGROUP</th>
+                        <th>REVIEWER</th>
+                        <th>DATE REVIEWED</th>
+                        <th>COMPLETION RATE</th>
+                       
+                    </thead>
+                    <tbody>
+                        {% for r in records %}
+                        <tr>
+                            <td>
+                                <a href="/myworkflow?case={{r.CASENUMBER}}&checklist={{r.CHECKLIST}}&revsid={{r.SID_REVIEWER}}&revname={{r.USERNAME}}&revdt={{r.DT_REVIEW}}"><i class="fa-regular fa-folder-open fa-primary"></i></a></td>
+
+                               
+
+                            <td>{{r.CASENUMBER}}</td>
+                            <td>{{r.CHECKLIST}}</td>
+                            <td>{{r.WORKGROUP}}</td>
+                            <td>{{r.SID_REVIEWER}} - {{r.USERNAME}}</td>
+                            <td>{{r.DT_REVIEW}}</td>
+                            <td>{{r.COMPLETION_RATE}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+
+   
+
+    </body>
+
+</html>
