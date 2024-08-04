@@ -1,5 +1,18 @@
+def convert_date_format(date_str):
+    if date_str:
+        try:
+            return datetime.datetime.strptime(date_str, '%m/%d/%Y').strftime('%Y-%m-%d')
+        except ValueError:
+            return date_str  # If the date format is not as expected, return it as is
+    return None
+
 def convert_empty_to_none(row):
-    return {key: (value if value != '' else None) for key, value in row.items()}
+    for key, value in row.items():
+        if value == '':
+            row[key] = None
+        elif 'DATE' or 'DT' in key.upper():
+            row[key] = convert_date_format(value)
+    return row
 
 def process_csv(file_path):
     conn = get_db()
@@ -35,3 +48,7 @@ def process_csv(file_path):
     finally:
         conn.close()
         os.remove(file_path)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=8080)
+
