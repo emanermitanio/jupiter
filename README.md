@@ -1,34 +1,37 @@
-<script>
-document.addEventListener('DOMContentLoaded', (event) => {
-    const workgroupSelect = document.getElementById('workgroupSelect');
-    const checklistSelect = document.getElementById('checklistSelect');
-    const dataTable = document.getElementById('dataTable');
-    const tableRows = dataTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+import os
+from exchangelib import DELEGATE, Account, Credentials, Configuration
+from dotenv import load_dotenv
 
-    workgroupSelect.addEventListener('change', filterTable);
-    checklistSelect.addEventListener('change', filterTable);
+# Load environment variables
+load_dotenv()
 
-    function filterTable() {
-        const selectedWorkgroup = workgroupSelect.value;
-        const selectedChecklist = checklistSelect.value;
+def test_connection():
+    email = os.getenv('EMAIL')
+    password = os.getenv('PASSWORD')
+    exchange_server = os.getenv('EXCHANGE_SERVER')
 
-        for (let i = 0; i < tableRows.length; i++) {
-            const row = tableRows[i];
-            const workgroup = row.cells[1].textContent.trim();
-            const checklist = row.cells[2].textContent.trim();
+    try:
+        # Set up credentials and configuration
+        credentials = Credentials(email, password)
+        config = Configuration(server=exchange_server, credentials=credentials)
+        account = Account(email, config=config, autodiscover=False, access_type=DELEGATE)
 
-            let showRow = true;
+        # Access the inbox
+        inbox = account.inbox
+        # Fetch the first 5 emails
+        items = inbox.all().order_by('-datetime_received')[:5]
 
-            if (selectedWorkgroup !== 'ALL' && workgroup !== selectedWorkgroup) {
-                showRow = false;
-            }
+        # Print details of fetched emails
+        for item in items:
+            print(f"Subject: {item.subject}")
+            print(f"Sender: {item.sender.email_address}")
+            print(f"Received: {item.datetime_received}")
+            print("-" * 30)
 
-            if (selectedChecklist !== 'ALL' && checklist !== selectedChecklist) {
-                showRow = false;
-            }
+        print("Connection to the Exchange server was successful!")
 
-            row.style.display = showRow ? '' : 'none';
-        }
-    }
-});
-</script>
+    except Exception as e:
+        print(f"Failed to connect to the Exchange server: {e}")
+
+if __name__ == '__main__':
+    test_connection()
