@@ -17,24 +17,3 @@
     <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-floppy-disk me-1"></i>SAVE</button>
   </div>
 </form>
-@app.route('/saveReviewerComments', methods=['POST'])
-def saveReviewerComments():
-    qid = request.form.get('qid')
-    reviewtype = request.form.get('reviewtype')
-    makercomments = request.form.get('makercomments')
-    checkercomments = request.form.get('checkercomments')
-
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute('UPDATE TBL_AUDIT SET MAKER_COMMENTS = ?, CHECKER_COMMENTS = ? WHERE ID = ?', 
-                   (makercomments, checkercomments, qid))
-    conn.commit()
-
-    cursor.close()
-    conn.close()
-
-    print(f'Updated Record ID: {qid}')
-    print(f'MAKER COMMENTS: {makercomments}')
-    print(f'CHECKER COMMENTS: {checkercomments}')
-
-    return redirect(request.referrer)
