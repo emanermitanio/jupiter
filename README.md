@@ -1,31 +1,7 @@
-import os
-import openpyxl
-from flask import request, redirect, url_for, flash
-from your_flask_app import app, get_db  # Import your get_db function
-
-@app.route('/uploadPipeline', methods=['POST'])
-def upload_pipeline():
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-    file = request.files['file']
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-    if file:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-        process_xlsx(file_path)  # Updated to process XLSX
-        flash('File successfully uploaded and data inserted')
-        return redirect(url_for('viewpipeline'))
-    return redirect(request.url)
-
-def convert_empty_to_none(row):
-    return {key: (value if value != '' else None) for key, value in row.items()}
-
 def process_xlsx(file_path):
     conn = get_db()
     cursor = conn.cursor()
+    wb = None  # Initialize wb
     try:
         wb = openpyxl.load_workbook(file_path)
         sheet = wb.active
@@ -58,6 +34,7 @@ def process_xlsx(file_path):
     except Exception as e:
         print(f"Error processing XLSX file: {e}")
     finally:
+        if wb:
+            wb.close()  # Ensure the workbook is closed
         conn.close()
         os.remove(file_path)
-        
