@@ -1,34 +1,39 @@
-from flask import Flask, render_template
-from exchangelib import Credentials, Account, Configuration, DELEGATE
-
-app = Flask(__name__)
-
-def get_emails():
-    credentials = Credentials('your_email@example.com', 'your_password')
-    config = Configuration(
-        server='your_ews_server',  # e.g., 'outlook.office365.com'
-        credentials=credentials
-    )
-    account = Account(
-        'shared_mailbox@example.com',
-        config=config,
-        autodiscover=False,  # Disable autodiscover
-        access_type=DELEGATE
-    )
-
-    emails = []
-    for item in account.inbox.all().order_by('-datetime_received')[:100]:
-        emails.append({
-            'subject': item.subject,
-            'body': item.text_body,
-            'sender': item.sender.email_address
-        })
-    return emails
-
-@app.route('/')
-def index():
-    emails = get_emails()
-    return render_template('index.html', emails=emails)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+WITH TotalCounts AS (
+    SELECT 
+        REVIEWTYPE, 
+        MAKER_SID, 
+        CHECKER_SID, 
+        COUNT(*) AS TotalRecords
+    FROM 
+        your_table
+    GROUP BY 
+        REVIEWTYPE, 
+        MAKER_SID, 
+        CHECKER_SID
+),
+AnsweredCounts AS (
+    SELECT 
+        REVIEWTYPE, 
+        MAKER_SID, 
+        CHECKER_SID, 
+        SUM(CASE WHEN MAKER_ANSWER IS NOT NULL AND MAKER_ANSWER != 'None' THEN 1 ELSE 0 END) AS MakerAnswered,
+        SUM(CASE WHEN CHECKER_ANSWER IS NOT NULL AND CHECKER_ANSWER != 'None' THEN 1 ELSE 0 END) AS CheckerAnswered
+    FROM 
+        your_table
+    GROUP BY 
+        REVIEWTYPE, 
+        MAKER_SID, 
+        CHECKER_SID
+)
+SELECT 
+    t.REVIEWTYPE, 
+    t.MAKER_SID, 
+    printf("%.0f%%", (a.MakerAnswered * 100.0) / t.TotalRecords) AS MAKER_COMPLETION,
+    t.CHECKER_SID, 
+    printf("%.0f%%", (a.CheckerAnswered * 100.0) / t.TotalRecords) AS CHECKER_COMPLETION
+FROM 
+    TotalCounts t
+JOIN 
+    AnsweredCounts a ON t.REVIEWTYPE = a.REVIEWTYPE 
+                     AND t.MAKER_SID = a.MAKER_SID 
+                     AND t.CHECKER_SID = a.CHECKER_SID;
